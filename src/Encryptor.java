@@ -136,14 +136,9 @@ public class Encryptor
         notSussy += decryptBlock();
       }
 
-      for (int i = notSussy.length() -1;  i >= 0; i--) {
-        if (notSussy.substring(notSussy.length()-1).equals("A"))
-        {
-          notSussy = notSussy.substring(0, notSussy.length()-1);
-        } else
-        {
-          return notSussy;
-        }
+      while(notSussy.substring(notSussy.length()-1).equals("A"))
+      {
+        notSussy = notSussy.substring(0, notSussy.length()-1);
       }
       return notSussy;
     }
