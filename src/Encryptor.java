@@ -126,14 +126,12 @@ public class Encryptor
       String notSussy = "";
       for (int i = 0; i < encryptedMessage.length(); i += (numRows*numCols)) {
         String segment = "";
-        if (i+(numRows*numCols) < encryptedMessage.length())
-        {
-          segment = encryptedMessage.substring(i, i+(numRows*numCols));
-        } else {
-          segment = encryptedMessage.substring(i);
-        }
-        fillBlock(segment);
-        notSussy += decryptBlock();
+
+        segment = encryptedMessage.substring(i, i+(numRows*numCols));
+//        System.out.println(segment);
+        String[][] pls = tempFill(segment);
+//        System.out.println(decryptBlock(pls));
+        notSussy += decryptBlock(pls);
       }
 
       while(notSussy.substring(notSussy.length()-1).equals("A"))
@@ -144,12 +142,31 @@ public class Encryptor
     }
   }
 
-  public String decryptBlock()
+  public String[][] tempFill(String words)
+  {
+    int count = 0;
+    String[][] ahhhh = new String[numCols][numRows];
+    for (int i = 0; i < numCols; i++) {
+      for (int j = 0; j < numRows; j++) {
+        if(count < words.length())
+        {
+          ahhhh[i][j] = words.substring(count, count+1);
+          count++;
+        } else
+        {
+          ahhhh[i][j] = "A";
+        }
+      }
+    }
+    return ahhhh;
+  }
+
+  public String decryptBlock(String[][] please)
   {
     String notSus = "";
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
-        notSus+= letterBlock[i][j];
+        notSus+= please[j][i];
       }
     }
     return notSus;
