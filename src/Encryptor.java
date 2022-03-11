@@ -171,4 +171,19 @@ public class Encryptor
     }
     return notSus;
   }
+
+ public static String shiftChar(String cha, int num)
+ {
+   char c = cha.charAt(0);
+   String uni = Integer.toHexString(c | 0x10000).substring(0);
+   //System.out.println( "\\u" + uni);
+   int uniNum = Integer.parseInt(uni);
+   uniNum+= num;
+   char[] please = Character.toChars(uniNum);
+   String oop = String.copyValueOf(please);
+   return oop;
+ }
+
+
+
 }
