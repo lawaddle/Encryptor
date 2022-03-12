@@ -129,9 +129,9 @@ public class Encryptor
 
         segment = encryptedMessage.substring(i, i+(numRows*numCols));
 //        System.out.println(segment);
-        String[][] pls = tempFill(segment);
-//        System.out.println(decryptBlock(pls));
-        notSussy += decryptBlock(pls);
+        String[][] tempBlock = tempFill(segment);
+//        System.out.println(decryptBlock(tempBlock));
+        notSussy += decryptBlock(tempBlock);
       }
 
       while(notSussy.substring(notSussy.length()-1).equals("A"))
@@ -145,28 +145,28 @@ public class Encryptor
   public String[][] tempFill(String words)
   {
     int count = 0;
-    String[][] ahhhh = new String[numCols][numRows];
+    String[][] block = new String[numCols][numRows];
     for (int i = 0; i < numCols; i++) {
       for (int j = 0; j < numRows; j++) {
         if(count < words.length())
         {
-          ahhhh[i][j] = words.substring(count, count+1);
+          block[i][j] = words.substring(count, count+1);
           count++;
         } else
         {
-          ahhhh[i][j] = "A";
+          block[i][j] = "A";
         }
       }
     }
-    return ahhhh;
+    return block;
   }
 
-  public String decryptBlock(String[][] please)
+  public String decryptBlock(String[][] block)
   {
     String notSus = "";
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
-        notSus+= please[j][i];
+        notSus+= block[j][i];
       }
     }
     return notSus;
@@ -193,9 +193,9 @@ public class Encryptor
 //   return age;
 // }
 
- public static String shiftString(String ok, int num)
+ public static String shiftString(String origString, int num)
  {
-   char[] result = ok.toCharArray();
+   char[] result = origString.toCharArray();
    for (int i = 0; i < result.length; i++) {
      result[i] += num;
    }
@@ -205,20 +205,20 @@ public class Encryptor
  //moves front # of rows to the end
  public static String[][] rowShiftBack(String[][] arry, int num)
  {
-   int uh = num;
+   int shiftTotal = num;
    if(num < 0)
    {
-     uh = arry.length+num;
+     shiftTotal = arry.length+num;
    }
-      String[][] ok = new String[uh][arry[0].length];
-      for (int i = 0; i < uh; i++) {
+      String[][] ok = new String[shiftTotal][arry[0].length];
+      for (int i = 0; i < shiftTotal; i++) {
         ok[i] = arry[i];
       }
-      for (int i = uh; i < arry.length; i++) {
-        arry[i-uh] = arry[i];
+      for (int i = shiftTotal; i < arry.length; i++) {
+        arry[i- shiftTotal] = arry[i];
       }
-      for (int i = 0; i < uh; i++) {
-        arry[arry.length-uh+i] = ok[i];
+      for (int i = 0; i < shiftTotal; i++) {
+        arry[arry.length- shiftTotal +i] = ok[i];
       }
    return arry;
  }
@@ -267,9 +267,9 @@ public class Encryptor
         sussy += encryptBlock();
       }
       int mesNum = message.length();
-      String tempS = "" + mesNum;
-      int okpls = tempS.length();
-      sussy =  "" + okpls + tempS + sussy;
+      String mesLenStr = "" + mesNum;
+      int okpls = mesLenStr.length();
+      sussy =  "" + okpls + mesLenStr + sussy;
       return sussy;
     }
 
@@ -292,16 +292,13 @@ public class Encryptor
 
         segment = encryptedMessage.substring(i, i+(numRows*numCols));
         segment = shiftString(segment, -i);
-        String[][] pls = tempFill(segment);
-        pls = rowShiftBack(pls, -rowShift);
-        pls = colShiftBack(pls, -colShift);
-        notSussy += decryptBlock(pls);
+        String[][] segmentBlocks = tempFill(segment);
+        segmentBlocks = rowShiftBack(segmentBlocks, -rowShift);
+        segmentBlocks = colShiftBack(segmentBlocks, -colShift);
+        notSussy += decryptBlock(segmentBlocks);
       }
 
-      while(notSussy.substring(notSussy.length()-1).equals("A"))
-      {
-        notSussy = notSussy.substring(0, notSussy.length()-1);
-      }
+
       notSussy = notSussy.substring(0, origMesLen);
       return notSussy;
     }
