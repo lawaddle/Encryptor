@@ -172,18 +172,139 @@ public class Encryptor
     return notSus;
   }
 
- public static String shiftChar(String cha, int num)
+// public static String shiftChar(String cha, int num)
+// {
+//   char c = cha.charAt(0);
+//   String uni = Integer.toHexString(c | 0x10000).substring(0);
+//   //System.out.println( "\\u" + uni);
+//   int uniNum = Integer.parseInt(uni);
+//   uniNum+= num;
+//   char[] please = Character.toChars(uniNum);
+//   String oop = String.copyValueOf(please);
+//   return oop;
+// }
+//
+// public String shiftString(String mess, int num)
+// {
+//   String age = "";
+//   for (int i = 0; i < mess.length(); i++) {
+//     age+=shiftChar(mess.substring(i,i+1), num);
+//   }
+//   return age;
+// }
+
+ public static String shiftString(String ok, int num)
  {
-   char c = cha.charAt(0);
-   String uni = Integer.toHexString(c | 0x10000).substring(0);
-   //System.out.println( "\\u" + uni);
-   int uniNum = Integer.parseInt(uni);
-   uniNum+= num;
-   char[] please = Character.toChars(uniNum);
-   String oop = String.copyValueOf(please);
-   return oop;
+   char[] result = ok.toCharArray();
+   for (int i = 0; i < result.length; i++) {
+     result[i] += num;
+   }
+   return new String(result);
+ }
+
+ //moves front # of rows to the end
+ public static String[][] rowShiftBack(String[][] arry, int num)
+ {
+   int uh = num;
+   if(num < 0)
+   {
+     uh = arry.length+num;
+   }
+      String[][] ok = new String[uh][arry[0].length];
+      for (int i = 0; i < uh; i++) {
+        ok[i] = arry[i];
+      }
+      for (int i = uh; i < arry.length; i++) {
+        arry[i-uh] = arry[i];
+      }
+      for (int i = 0; i < uh; i++) {
+        arry[arry.length-uh+i] = ok[i];
+      }
+   return arry;
+ }
+
+ public static String[][] colShiftBack(String[][] arry, int num)
+ {
+   String[][] temp = arrayRotate(arry);
+   temp = rowShiftBack(temp, num);
+   temp = arrayRotate(temp);
+   return temp;
+ }
+
+ public static String[][] arrayRotate(String[][] arry)
+ {
+   String[][] rote = new String[arry[0].length][arry.length];
+   for (int i = 0; i < arry[0].length; i++) {
+     for (int j = 0; j < arry.length; j++) {
+       rote[i][j] = arry[j][i];
+     }
+   }
+   return rote;
  }
 
 
+
+  public String superEncryptMessage(String message, int rowShift, int colShift)
+  {
+    if (message.equals(""))
+    {
+      return "";
+    } else
+    {
+      String sussy = "";
+      for (int i = 0; i < message.length(); i += (numRows*numCols)) {
+        String segment = "";
+        if (i+(numRows*numCols) < message.length())
+        {
+          segment = message.substring(i, i+(numRows*numCols));
+        } else {
+          segment = message.substring(i);
+        }
+        segment = shiftString(segment, i);
+        fillBlock(segment);
+        letterBlock = rowShiftBack(letterBlock, rowShift);
+        letterBlock = colShiftBack(letterBlock, colShift);
+        sussy += encryptBlock();
+      }
+      int mesNum = message.length();
+      String tempS = "" + mesNum;
+      int okpls = tempS.length();
+      sussy =  "" + okpls + tempS + sussy;
+      return sussy;
+    }
+
+  }
+
+  public String superDecryptMessage(String encryptedMessage, int rowShift, int colShift)
+  {
+    int startNums = Integer.parseInt(encryptedMessage.substring(0, 1));
+    int origMesLen = Integer.parseInt(encryptedMessage.substring(1, 1+startNums));
+    encryptedMessage = encryptedMessage.substring(1+startNums);
+
+    if (encryptedMessage.equals(""))
+    {
+      return "";
+    } else
+    {
+      String notSussy = "";
+      for (int i = 0; i < encryptedMessage.length(); i += (numRows*numCols)) {
+        String segment = "";
+
+        segment = encryptedMessage.substring(i, i+(numRows*numCols));
+        segment = shiftString(segment, -i);
+        String[][] pls = tempFill(segment);
+        pls = rowShiftBack(pls, -rowShift);
+        pls = colShiftBack(pls, -colShift);
+        notSussy += decryptBlock(pls);
+      }
+
+      while(notSussy.substring(notSussy.length()-1).equals("A"))
+      {
+        notSussy = notSussy.substring(0, notSussy.length()-1);
+      }
+      notSussy = notSussy.substring(0, origMesLen);
+      return notSussy;
+    }
+  }
 
 }
