@@ -72,6 +72,7 @@ public class Encryptor
    */
   public String encryptMessage(String message)
   {
+    letterBlock = new String[numRows][numCols];
     if (message.equals(""))
     {
       return "";
@@ -246,6 +247,7 @@ public class Encryptor
 
   public String superEncryptMessage(String message, int rowShift, int colShift)
   {
+    letterBlock = new String[numRows][numCols];
     if (message.equals(""))
     {
       return "";
